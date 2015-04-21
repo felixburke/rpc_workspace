@@ -1,0 +1,17 @@
+<package>
+  <description brief="rpc_game_client">
+
+     rpc_game_client
+
+  </description>
+  <author>Lasse Einig</author>
+  <license>BSD</license>
+  <review status="unreviewed" notes=""/>
+  <url>http://ros.org/wiki/rpc_game_client</url>
+  <depend package="std_msgs"/>
+  <depend package="rospy"/>
+  <depend package="roscpp"/>
+
+</package>
+
+
