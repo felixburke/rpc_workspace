@@ -4,9 +4,11 @@ roslib.load_manifest("rpc_game_client")
 import rospy
 import socket
 import os
+import sys
 from threading import Thread
 from rpc_game_client.msg import Alive, Score, GameState
 from rpc_game_client.srv import ClientScore, PlayerScore
+from geometry_msgs.msg import Twist
 
 class GameClient:
 	def __init__(self):
@@ -27,8 +29,15 @@ class GameClient:
 		# Block 10 seconds between submission
 		self.interval = rospy.Duration(10)
 		self.last_score = rospy.Time(0)
-		# Blocking State & Blocker
-		self.blocked = False
+		# Blocking Message/State & Blocker
+		self.block_msg = Twist()
+		self.block_msg.linear.x = 0
+		self.block_msg.linear.y = 0
+		self.block_msg.linear.z = 0
+		self.block_msg.angular.x = 0
+		self.block_msg.angular.y = 0
+		self.block_msg.angular.z = 0
+		self.blocked = True
 		block_thread = Thread(target=self.block)
 		block_thread.start()
 		rospy.loginfo("[GameClient@%s] Started GameClient with tag ID: %s" % (self.hostname, self.mytag))
@@ -82,13 +91,14 @@ class GameClient:
 
 	def block(self):
 		rospy.sleep(1)
+		self.block_pub = False
 		while not rospy.is_shutdown():
 			if self.blocked:
-				rospy.logerr("Implement blocking by talking on teleop")
-				#self.alive_pub = rospy.Publisher('/rpc_game/alive', Alive, queue_size=0)
-				#Create publisher on /cmd_vel/ topic
-				#How to shut down a publisher in python?
-				#Create Twist Message with 0 parameters and publish 10x per seconds to override any movement commands
+				if not self.block_pub:
+					self.block_pub = rospy.Publisher('/cmd_vel_mux/input/teleop', Twist, queue_size=10)
+				self.block_pub.publish(self.block_msg)
+			else:
+				self.block_pub = False
 			rospy.sleep(0.1)
 
 	def exit(self):

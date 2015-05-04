@@ -12,5 +12,5 @@
 			output="log"
 			/>
 	</group>
-	<node name="$(anon game_client)" pkg="rpc_game_client" type="game_client.py" output="screen" />
+	<node pkg="rpc_game_client" name="$(anon game_client)" type="game_client.py" output="screen" />
 </launch>
