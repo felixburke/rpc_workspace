@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<launch>
+	<arg name="local" default="false"/>
+	<group unless="$(arg local)">
+		<!-- multimaster_fkie -->
+		<node name="$(anon master_discovery)" pkg="master_discovery_fkie" type="master_discovery" output="log"/>
+		<node name="$(anon master_sync)" pkg="master_sync_fkie" type="master_sync"
+			args="_ignore_topics:=['']
+			_ignore_services:=['']
+			_sync_topics:=['/rpc_game/alive, /rpc_game/gamestate']
+			_sync_services:=['/rpc_score_master']"
+			output="log"
+			/>
+	</group>
+	<node name="$(anon game_client)" pkg="rpc_game_client" type="game_client.py" output="screen" />
+</launch>

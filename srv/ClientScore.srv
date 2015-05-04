@@ -1,0 +1,7 @@
+Header header
+string hostname
+sensor_msgs/CompressedImage image
+sensor_msgs/CameraInfo camerainfo
+---
+Score score
+string hostname_hit
