@@ -24,6 +24,7 @@ class GameClient:
 		# Send Alive message every 5 seconds
 		alive_thread = Thread(target=self.alive)
 		alive_thread.start()
+		rospy.loginfo("[GameClient@%s] Started Alive thread")
 		# ServiceMiddleLayer
 		self.score_service = rospy.Service('/rpc_score', PlayerScore, self.rpc_score)
 		# Block 10 seconds between submission
@@ -40,6 +41,7 @@ class GameClient:
 		self.blocked = True
 		block_thread = Thread(target=self.block)
 		block_thread.start()
+		rospy.loginfo("[GameClient@%s] Started Block thread")
 		rospy.loginfo("[GameClient@%s] Started GameClient with tag ID: %s" % (self.hostname, self.mytag))
 		self.run()
 
@@ -49,6 +51,8 @@ class GameClient:
 
 	def rpc_score(self, request):
 		time_since_last_score = (rospy.Time.now() - self.last_score)
+		if self.blocked:
+			raise rospy.ServiceException("Player is blocked by GameMaster")
 		if (time_since_last_score < self.interval):
 			time_to_sleep = self.interval - time_since_last_score
 			rospy.logerr("[GameClient@%s] Requested score too early. Blocking for %s seconds" % (self.hostname, time_to_sleep.to_sec()))
