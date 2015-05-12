@@ -24,7 +24,7 @@ class GameClient:
 		# Send Alive message every 5 seconds
 		alive_thread = Thread(target=self.alive)
 		alive_thread.start()
-		rospy.loginfo("[GameClient@%s] Started Alive thread")
+		rospy.loginfo("[GameClient@%s] Started Alive thread" % (self.hostname))
 		# ServiceMiddleLayer
 		self.score_service = rospy.Service('/rpc_score', PlayerScore, self.rpc_score)
 		# Block 10 seconds between submission
@@ -41,7 +41,7 @@ class GameClient:
 		self.blocked = True
 		block_thread = Thread(target=self.block)
 		block_thread.start()
-		rospy.loginfo("[GameClient@%s] Started Block thread")
+		rospy.loginfo("[GameClient@%s] Started Block thread" % (self.hostname))
 		rospy.loginfo("[GameClient@%s] Started GameClient with tag ID: %s" % (self.hostname, self.mytag))
 		self.run()
 
