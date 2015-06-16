@@ -4,7 +4,7 @@
 	<group unless="$(arg local)">
 		<!-- multimaster_fkie -->
 		<node name="$(anon master_discovery)" pkg="master_discovery_fkie" type="master_discovery" output="log">
-			<rosparam param="robot_hosts">[donny,mikey,leo,raph,tams122,tams192,tams193,tams194,tams195,tams196,tams197]</rosparam>
+			<rosparam param="robot_hosts">[donny,mikey,leo,raph,tams122,tams192,tams193,tams194,tams195,tams196,tams197,tams198,tams199]</rosparam>
 		</node>
 		<node name="$(anon master_sync)" pkg="master_sync_fkie" type="master_sync"
 			args="_ignore_topics:=['']
