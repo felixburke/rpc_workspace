@@ -25,3 +25,7 @@ srv_gen/
 */src/*/cfg
 */src/*/msg
 */src/*/srv
+*.aux
+*.fdb_latexmk
+*.log
+*.synctex.gz

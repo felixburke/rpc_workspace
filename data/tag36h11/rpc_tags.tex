@@ -1,0 +1,36 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{pgffor}
+\usepackage[top=2.5cm, bottom=2.5cm, left=2cm, right=2cm]{geometry}
+\newcommand{\tagsize}{8cm}
+\newcommand{\bitsize}{36}
+\newcommand{\hamming}{11}
+\setlength\parindent{0pt}
+\setlength{\fboxsep}{0.1cm}
+\begin{document}
+\pagestyle{empty}
+\foreach \tagnumber in {00001,00002,00003,00004} {
+	\begin{center}
+		\LaTeX generated Aprils Tags\\
+		Tag family:	tag\bitsize\_\hamming\_\\
+		Number of bits: \bitsize\\
+		Hamming distance: \hamming\\
+		Tagsize (including white border): \tagsize\\[1cm]
+		\Large Tag ID: \tagnumber\\[1cm]
+		\hrule\\[1cm]
+	\end{center}
+	\begin{minipage}[b]{.49\linewidth}
+		\fbox{\includegraphics[width=\tagsize]{tag\bitsize_\hamming_\tagnumber.png}}
+	\end{minipage}
+	\begin{minipage}[b]{.49\linewidth}
+		\fbox{\includegraphics[width=\tagsize]{tag\bitsize_\hamming_\tagnumber.png}}
+	\end{minipage}\\[1cm]
+	\begin{minipage}[b]{.49\linewidth}
+		\fbox{\includegraphics[width=\tagsize]{tag\bitsize_\hamming_\tagnumber.png}}
+	\end{minipage}
+	\begin{minipage}[b]{.49\linewidth}
+		\fbox{\includegraphics[width=\tagsize]{tag\bitsize_\hamming_\tagnumber.png}}
+	\end{minipage}
+	\newpage
+}
+\end{document}
