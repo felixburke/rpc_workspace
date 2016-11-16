@@ -9,6 +9,7 @@ from threading import Thread
 from rpc_game_client.msg import Alive, Score, GameState
 from rpc_game_client.srv import ClientScore, PlayerScore
 from geometry_msgs.msg import Twist
+from kobuki_msgs.msg import MotorPower, Led
 
 class GameClient:
 	def __init__(self):
@@ -21,6 +22,8 @@ class GameClient:
 		rospy.init_node("game_client_%s" % self.hostname)
 		self.alive_pub = rospy.Publisher('/rpc_game/alive', Alive, queue_size=0)
 		rospy.Subscriber('/rpc_game/gamestate', GameState, self.game_state)
+		self.motor_power_pub = rospy.Publisher('/mobile_base/commands/motor_power', MotorPower, queue_size=1, latch=True)
+		self.led1_pub = rospy.Publisher('mobile_base/commands/led1', Led, queue_size=1, latch=True)
 		# Send Alive message every 5 seconds
 		alive_thread = Thread(target=self.alive)
 		alive_thread.start()
@@ -31,16 +34,13 @@ class GameClient:
 		self.interval = rospy.Duration(10)
 		self.last_score = rospy.Time(0)
 		# Blocking Message/State & Blocker
-		self.block_msg = Twist()
-		self.block_msg.linear.x = 0
-		self.block_msg.linear.y = 0
-		self.block_msg.linear.z = 0
-		self.block_msg.angular.x = 0
-		self.block_msg.angular.y = 0
-		self.block_msg.angular.z = 0
 		self.blocked = True
-		block_thread = Thread(target=self.block)
-		block_thread.start()
+		self.block_msg = MotorPower()
+		self.block_msg.state = 1
+		self.motor_power_pub.publish(self.block_msg)
+		self.led1_msg = Led()
+		self.led1_msg.value = 1
+		self.led1_pub.publish(self.led1_msg)
 		rospy.loginfo("[GameClient@%s] Started Block thread" % (self.hostname))
 		rospy.loginfo("[GameClient@%s] Started GameClient with tag ID: %s" % (self.hostname, self.mytag))
 		self.run()
@@ -73,13 +73,18 @@ class GameClient:
 				rospy.logerr("[GameClient@%s] Service call failed: %s" % (self.hostname, e))
 
 	def game_state(self, data):
-		blocked = False
+		self.blocked = False
 		if data.gamestate == "waiting":
-			blocked = True
+			self.blocked = True
+			self.block_msg.state = 0
+			self.led1_msg.value = 3
 		if self.hostname in data.playernames:
 			if data.playerstates[data.playernames.index(self.hostname)] > 1:
-				blocked = True
-		self.blocked = blocked
+				self.blocked = False
+				self.block_msg.state = 1
+				self.led1_msg.value = 1
+		self.motor_power_pub.publish(self.block_msg)
+		self.led1_pub.publish(self.led1_msg)
 		if self.blocked:
 			rospy.logwarn("[GameClient@%s] blocked by GameMaster" % self.hostname)
 
@@ -92,18 +97,6 @@ class GameClient:
 			msg.tagid = self.mytag
 			self.alive_pub.publish(msg)
 			rospy.sleep(5)
-
-	def block(self):
-		rospy.sleep(1)
-		self.block_pub = False
-		while not rospy.is_shutdown():
-			if self.blocked:
-				if not self.block_pub:
-					self.block_pub = rospy.Publisher('/cmd_vel_mux/input/teleop', Twist, queue_size=10)
-				self.block_pub.publish(self.block_msg)
-			else:
-				self.block_pub = False
-			rospy.sleep(0.1)
 
 	def exit(self):
 		rospy.logerr("[GameClient@%s] Shutdown requested!" % self.hostname)
