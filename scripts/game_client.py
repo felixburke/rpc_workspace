@@ -103,6 +103,10 @@ class GameClient:
 			rospy.sleep(5)
 
 	def exit(self):
+		self.motor_msg.state = self.motor_msg.ON
+		self.led_msg.value = self.led_msg.BLACK
+		self.motor_power_pub.publish(self.motor_msg)
+		self.led_pub.publish(self.led_msg)
 		rospy.logerr("[GameClient@%s] Shutdown requested!" % self.hostname)
 
 if __name__ == '__main__':
