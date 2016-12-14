@@ -61,7 +61,7 @@ class GameClient:
 		else:
 			try:
 				score_master = rospy.ServiceProxy('/rpc_score_master', ClientScore)
-				rospy.wait_for_service('/rpc_score', timeout=1)
+				rospy.wait_for_service('/rpc_score_master', timeout=1)
 				response_master = score_master(request.header, self.hostname, request.image, request.camerainfo)
 				rospy.loginfo("[GameClient@%s] Scored: %s (%s+%s+%s) @ %s" % (self.hostname, response_master.score.total, response_master.score.align, response_master.score.center, response_master.score.distance, response_master.hostname_hit))
 				response = Score()
