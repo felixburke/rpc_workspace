@@ -6,15 +6,18 @@
     Provide RPC Game Client. (Communication abstraction)
   </description>
   <maintainer email="einig@informatik.uni-hamburg.de">Lasse Einig</maintainer>
-  <author email="einig@einig.informatik.uni-hamburg.de">Lasse Einig</author>
+  <author email="einig@informatik.uni-hamburg.de">Lasse Einig</author>
+
   <license>BSD</license>
-  <build_depend>message_generation</build_depend>
-  <run_depend>message_runtime</run_depend>
+
   <buildtool_depend>catkin</buildtool_depend>
+  <build_depend>message_generation</build_depend>
   <build_depend>roscpp</build_depend>
   <build_depend>rospy</build_depend>
   <build_depend>std_msgs</build_depend>
   <build_depend>sensor_msgs</build_depend>
+
+  <run_depend>message_runtime</run_depend>
   <run_depend>roscpp</run_depend>
   <run_depend>rospy</run_depend>
   <run_depend>std_msgs</run_depend>
