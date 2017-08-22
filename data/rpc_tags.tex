@@ -1,0 +1,79 @@
+\documentclass[a4paper]{article}
+\usepackage{graphicx}
+\usepackage{pgffor}
+\usepackage{tikz}
+\usepackage{xifthen}
+\usepackage{multido}
+\usepackage{printlen}
+\usepackage[top=1.0cm, bottom=1.0cm, left=0cm, right=0cm]{geometry}
+\newboolean{cutmarks}
+\newboolean{tagnumber}
+\def\tagcount{0}
+\newlength{\tagsize}
+\newlength{\totaltagsize}
+
+
+% -------------------- EDIT ONLY BELOW! --------------------
+\def\tagarray{0,5,10}
+\setboolean{cutmarks}{true}
+\setboolean{tagnumber}{true}
+\setlength{\tagsize}{180mm}
+% -------------------- EDIT ONLY ABOVE! --------------------
+
+
+\newcommand{\bitsize}{36}%do not modify
+\newcommand{\hamming}{11}%do not modify
+\setlength{\totaltagsize}{\tagsize+1.55cm}
+\newcommand{\tagnum}[1]{\ifnum#1<10 0000#1\else\ifnum#1<100 000#1\else\ifnum#1<1000 00#1\else\ifnum#1<10 0#1\else#1\fi\fi\fi\fi}
+\setlength\parindent{0pt}
+
+\newcommand{\inserttag}[1]{
+	\begin{tikzpicture}
+		\node[] at (0,0) (tag) {\includegraphics[width=\the\tagsize]{tag\bitsize h\hamming /tag\bitsize_\hamming_\tagnum{56}.png}};
+		\ifthenelse{\boolean{tagnumber}}{
+			\node[] at ([yshift=.5cm]tag.north) {\tagnumber};
+		}{}{}
+		\ifthenelse{\boolean{cutmarks}}{
+			\ifthenelse{\isin{#1}{0,1,3}}{%left
+				\draw[] ([xshift=-.2cm]tag.north west) -- ([xshift=-1cm]tag.north west);
+				\draw[] ([xshift=-.2cm]tag.south west) -- ([xshift=-1cm]tag.south west);
+			}{}
+			\ifthenelse{\isin{#1}{0,1,2}}{%upper
+				\draw[] ([yshift=.2cm]tag.north west) -- ([yshift=1cm]tag.north west);
+				\draw[] ([yshift=.2cm]tag.north east) -- ([yshift=1cm]tag.north east);
+			}{}
+			\ifthenelse{\isin{#1}{0,3,4}}{%lower
+				\draw[] ([yshift=-.2cm]tag.south east) -- ([yshift=-1cm]tag.south east);
+				\draw[] ([yshift=-.2cm]tag.south west) -- ([yshift=-1cm]tag.south west);
+			}{}
+			\ifthenelse{\isin{#1}{0,2,4}}{%right
+				\draw[] ([xshift=.2cm]tag.north east) -- ([xshift=1cm]tag.north east);
+				\draw[] ([xshift=.2cm]tag.south east) -- ([xshift=1cm]tag.south east);
+
+			}{}
+		}{}
+	\end{tikzpicture}
+}
+
+\begin{document}
+\pagestyle{empty}
+\foreach \tagnumber in \tagarray {
+	\centering
+	\LaTeX generated Aprils Tags\\
+	Tag family:	tag\bitsize{}h\hamming\\
+	Number of bits: \bitsize{} ---
+	Hamming distance: \hamming\\
+	Tagsize (including white border): \uselengthunit{mm}\printlength{\tagsize}\\[.5cm]
+	\Large Tag ID: \tagnumber\\[.5cm]%
+	%\ifdim \tagsize < 90mm\def\tagcount{4}\fi%
+	%\ifdim \tagsize < .428\textwidth\def\tagcount{4}\fi%
+	\ifdim \totaltagsize < .5\textwidth\def\tagcount{4}\fi%
+	\ifthenelse{\tagcount=0}{\inserttag{0}}{%
+		\inserttag{1}%
+		\inserttag{2}\\
+		\inserttag{3}%
+		\inserttag{4}%
+	}%
+	\newpage
+}
+\end{document}
