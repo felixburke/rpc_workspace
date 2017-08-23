@@ -29,7 +29,7 @@
 
 \newcommand{\inserttag}[1]{
 	\begin{tikzpicture}
-		\node[] at (0,0) (tag) {\includegraphics[width=\the\tagsize]{tag\bitsize h\hamming /tag\bitsize_\hamming_\tagnum{56}.png}};
+		\node[] at (0,0) (tag) {\includegraphics[width=\the\tagsize]{tag\bitsize h\hamming /tag\bitsize_\hamming_\tagnum{\tagnumber}.png}};
 		\ifthenelse{\boolean{tagnumber}}{
 			\node[] at ([yshift=.5cm]tag.north) {\tagnumber};
 		}{}{}
