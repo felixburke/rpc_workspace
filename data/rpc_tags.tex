@@ -14,10 +14,10 @@
 
 
 % -------------------- EDIT ONLY BELOW! --------------------
-\def\tagarray{0,5,10}
+\def\tagarray{1,2,3,4}
 \setboolean{cutmarks}{true}
 \setboolean{tagnumber}{true}
-\setlength{\tagsize}{180mm}
+\setlength{\tagsize}{79mm}
 % -------------------- EDIT ONLY ABOVE! --------------------
 
 
@@ -29,7 +29,7 @@
 
 \newcommand{\inserttag}[1]{
 	\begin{tikzpicture}
-		\node[] at (0,0) (tag) {\includegraphics[width=\the\tagsize]{tag\bitsize h\hamming /tag\bitsize_\hamming_\tagnum{\tagnumber}.png}};
+		\node[] at (0,0) (tag) {\frame{\includegraphics[width=\the\tagsize]{tag\bitsize h\hamming /tag\bitsize_\hamming_\tagnum{\tagnumber}.png}}};
 		\ifthenelse{\boolean{tagnumber}}{
 			\node[] at ([yshift=.5cm]tag.north) {\tagnumber};
 		}{}{}
