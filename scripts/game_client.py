@@ -17,7 +17,7 @@ class GameClient:
 		self.hostname = socket.gethostname()
 		try:
 			self.mytag = int(os.environ['RPC_TAG_ID'])
-		except KeyError, e:
+		except KeyError as e:
 			self.mytag = 0
 		rospy.init_node("game_client_%s" % self.hostname)
 		self.alive_pub = rospy.Publisher('/rpc_game/alive', Alive, queue_size=0)
@@ -69,7 +69,7 @@ class GameClient:
 				response = response_master.score
 				self.last_score = rospy.Time.now()
 				return response
-			except rospy.ServiceException, e:
+			except rospy.ServiceException as e:
 				rospy.logerr("[GameClient@%s] Service call failed: %s" % (self.hostname, e))
 
 	def game_state(self, data):
