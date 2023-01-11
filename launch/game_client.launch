@@ -3,10 +3,10 @@
 	<arg name="local" default="false"/>
 	<group unless="$(arg local)">
 		<!-- multimaster_fkie -->
-		<node name="$(anon master_discovery)" pkg="master_discovery_fkie" type="master_discovery" output="log">
-			<rosparam param="robot_hosts">[donny,mikey,leo,raph,tams223]</rosparam>
+		<node name="$(anon master_discovery)" pkg="fkie_master_discovery" master="type_discovery" output="log">
+			<rosparam param="robot_hosts">[donny,mikey,leo,raph,tams194]</rosparam>
 		</node>
-		<node name="$(anon master_sync)" pkg="master_sync_fkie" type="master_sync">
+		<node name="$(anon master_sync)" pkg="fkie_master_sync" type="master_sync">
 			<rosparam param="sync_services">['/rpc_score_master']</rosparam>
 <rosparam param="sync_topics">
 - /rpc_game/alive
