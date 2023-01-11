@@ -3,7 +3,7 @@
 	<arg name="local" default="false"/>
 	<group unless="$(arg local)">
 		<!-- multimaster_fkie -->
-		<node name="$(anon master_discovery)" pkg="fkie_master_discovery" master="type_discovery" output="log">
+		<node name="$(anon master_discovery)" pkg="fkie_master_discovery" type="master_discovery" output="log">
 			<rosparam param="robot_hosts">[donny,mikey,leo,raph,tams194]</rosparam>
 		</node>
 		<node name="$(anon master_sync)" pkg="fkie_master_sync" type="master_sync">
