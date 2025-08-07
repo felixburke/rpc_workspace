@@ -65,7 +65,20 @@ RUN apt-get install -y \
   ros-humble-plotjuggler-msgs \
   ros-humble-plotjuggler-ros \
   ros-humble-rmw-cyclonedds-cpp \
-  ros-humble-rqt-robot-monitor
+  ros-humble-rqt-robot-monitor \
+  ros-humble-apriltag \
+  ros-humble-apriltag-ros \
+  ros-humble-irobot-create-description \
+  ros-humble-turtlebot4-description \
+  ros-humble-turtlebot4-viz \
+  ros-humble-nav2-rviz-plugins
+
+# Add zenoh bridge repository
+RUN echo "deb [trusted=yes] https://download.eclipse.org/zenoh/debian-repo/ /" | sudo tee -a /etc/apt/sources.list > /dev/null \
+  && apt-get update
+
+# Install zenoh bridge
+RUN apt-get install -y zenoh-bridge-ros2dds
 
 # Set zsh as default shell
 SHELL ["/bin/zsh", "-c"]
