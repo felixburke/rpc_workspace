@@ -54,5 +54,5 @@
     "seccomp=unconfined"
   ],
 
-  "postCreateCommand": "git config --global --add safe.directory '*' && make install-git-filters && make build",
+  "postCreateCommand": "git config --global --add safe.directory '*' && just setup"
 }
