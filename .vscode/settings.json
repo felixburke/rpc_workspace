@@ -216,7 +216,7 @@
     },
     // Tell the ROS extension where to find the setup.bash
     // This also utilizes the COLCON_WS environment variable, which needs to be set
-    "ROS2.distro": "jazzy",
+    "ROS2.distro": "humble",
     "search.useIgnoreFiles": false,
     "python.autoComplete.extraPaths": [
         "/opt/ros/iron/lib/python3.10/site-packages"
@@ -231,5 +231,9 @@
     },
     "[json]": {
         "editor.defaultFormatter": "vscode.json-language-features"
+    },
+    "search.exclude": {
+        "build": true,
+        "install": true,
     },
 }
