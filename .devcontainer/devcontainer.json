@@ -1,0 +1,58 @@
+{
+  "name": "Turtlebot4 Humble Dev",
+
+  "build": { "dockerfile": "Dockerfile" },
+
+  "containerEnv": {
+    "DISPLAY": "${localEnv:DISPLAY}",
+    "LIBGL_ALWAYS_SOFTWARE": "1",
+    "QT_X11_NO_MITSHM": "1",
+    "DOCKER": "1"
+  },
+
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "terminal.integrated.defaultProfile.linux": "zsh",
+        "terminal.integrated.profiles.linux": { "zsh": { "path": "/bin/zsh" } },
+        "dev.containers.copyGitConfig": false,
+        "dev.containers.gitCredentialHelperConfigLocation": "none"
+      },
+      "extensions": [
+            "charliermarsh.ruff", // Ruff linting and formatting support
+            "DotJoshJohnson.xml", // XML support
+            "mohsen1.prettify-json", // JSON formatting
+            "Ranch-Hand-Robotics.rde-pack", // ROS support
+            "ms-python.python", // Python support
+            "ms-python.vscode-pylance", // Python support
+            "ms-vscode.cmake-tools", // CMake support
+            "ms-vscode.cpptools-extension-pack", // C++ support
+            "ms-vscode.cpptools-themes", // C++ support
+            "ms-vscode.cpptools", // C++ support
+            "streetsidesoftware.code-spell-checker-german", // Spell checker
+            "streetsidesoftware.code-spell-checker" // Spell checker
+        ]
+    }
+  },
+
+  "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/tams/turtlebot_workspace",
+  "workspaceFolder": "/home/tams/turtlebot_workspace",
+
+  "mounts": [
+    "type=bind,source=${localEnv:HOME},target=/srv/host_home,consistency=cached"
+  ],
+
+  "runArgs": [
+    "--tmpfs",
+    "/tmp:exec,mode=01777",
+    "--privileged",
+    "--net=host",
+    "--device=/dev/dri:/dev/dri",
+    "--volume=/tmp/.X11-unix:/tmp/.X11-unix",
+    "--cap-add=SYS_PTRACE",
+    "--security-opt",
+    "seccomp=unconfined"
+  ],
+
+  "postCreateCommand": "git config --global --add safe.directory '*' && make install-git-filters && make build",
+}
