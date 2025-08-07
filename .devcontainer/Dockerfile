@@ -75,21 +75,23 @@ SHELL ["/bin/zsh", "-c"]
 # when the host user is part of the users group.
 # Then create a user with home directory and add allow it to use sudo
 RUN groupdel users \
-  && userdel -r ubuntu \
-  && useradd -m -U -u "$uid" -G sudo -s /bin/zsh $user \
-  && groupmod -g "$gid" $user \
-  && echo "$user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+&& useradd -m -U -u "$uid" -G sudo -s /bin/zsh $user \
+&& groupmod -g "$gid" $user \
+&& echo "$user ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 USER $user
 
 # Install pip colcon extensions / patches as user
 RUN python3 -m pip install --user \
-    git+https://github.com/ruffsl/colcon-clean \
-    git+https://github.com/timonegk/colcon-core.git@colors \
-    git+https://github.com/timonegk/colcon-notification.git@colors \
-    git+https://github.com/timonegk/colcon-output.git@colors
+git+https://github.com/ruffsl/colcon-clean \
+git+https://github.com/timonegk/colcon-core.git@colors \
+git+https://github.com/timonegk/colcon-notification.git@colors \
+git+https://github.com/timonegk/colcon-output.git@colors
 
-# Install oh-my-zsh for pretty terminal
+# Install just (it is better then make and available in the apt only from 24.04 onwards)
+RUN curl --proto '=https' --tlsv1.2 -sSf https://just.systems/install.sh | bash -s -- --to $HOME/.local/bin/
+
+  # Install oh-my-zsh for pretty terminal
 RUN sh -c "$(wget -O- https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" && \
   git clone https://github.com/zsh-users/zsh-autosuggestions "${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}/plugins/zsh-autosuggestions"
 

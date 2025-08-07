@@ -80,8 +80,8 @@ rid() {
 # This needs to be called every time we source something ROS 2 related.
 # Previous loading of bashcompinit is required.
 update_ros2_argcomplete() {
-  eval "$(register-python-argcomplete colcon)"
-  eval "$(register-python-argcomplete ros2)"
+  eval "$(register-python-argcomplete3 colcon)"
+  eval "$(register-python-argcomplete3 ros2)"
 }
 
 # Source the ROS 2 setup files

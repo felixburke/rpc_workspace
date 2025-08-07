@@ -1,4 +1,4 @@
-.PHONY : install-git-filters rosdep status clean build deploy
+set shell := ["zsh", "-c"]
 
 install-git-filters:
 	# Install git filters
@@ -14,10 +14,6 @@ rosdep:
 	rosdep update
 	rosdep install --from-paths src --ignore-src --rosdistro jazzy -y
 
-status:
-	# Show status of all repositories
-	vcs status . --nested
-
 clean:
 	# Clean the workspace
 	# This removes all build, install, and log directories
@@ -25,13 +21,13 @@ clean:
 
 build:
 	# Build the workspace
-	cba
+	. /opt/ros/humble/setup.zsh
+	colcon build --symlink-install --continue-on-error
 
-build_%:
-	# Build a specific package
-	# Usage: make build_<package_name>
-	# This will build the specified package and its dependencies
-	cbs $*
+build-package package:
+	# Build a specific package in the workspace
+	. /opt/ros/humble/setup.zsh
+	colcon build --symlink-install --packages-select {{package}}
 
 deploy:
 	# Deploy the robots

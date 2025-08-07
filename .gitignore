@@ -1,0 +1,12 @@
+# ROS 2 workspace
+build/
+install/
+log/
+
+# Colcon specific
+.colcon/
+.colcon.meta
+
+# Python cache
+__pycache__/
+*.py[cod]
