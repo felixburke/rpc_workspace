@@ -68,6 +68,7 @@ RUN apt-get install -y \
   ros-humble-rqt-robot-monitor \
   ros-humble-apriltag \
   ros-humble-apriltag-ros \
+  ros-humble-irobot-create-msgs \
   ros-humble-irobot-create-description \
   ros-humble-turtlebot4-description \
   ros-humble-turtlebot4-viz \
