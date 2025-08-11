@@ -131,8 +131,5 @@ export VISUAL="vim"
 
 # Some user instructions
 echo "Hello there! Welcome to the TAMS ROS 2 development environment!"
-echo "If you just (re)build this container a few manual steps are nessessary:"
-echo "Create a ssh key with 'ssh-keygen -q -f $HOME/.ssh/id_rsa -N \"\" &&  cat $HOME/.ssh/id_rsa.pub'."
-echo "Copy the commands output and add it to your GitHub account ('https://github.com/settings/keys') (ctrl+click to open in browser)."
-echo "To compile all packages in the workspace use 'cba'. If you want to compile only a specific package use 'cbs <package_name>'."
+echo "To compile all packages in the workspace use 'just build'. If you want to compile only a specific package use 'just build-package <package_name>'."
 echo "Run 'xhost local:root' in a terminal on the host machine to enable GUI applications (e.g. rviz2) in the container. This needs to be done after every restart of the host machine."
