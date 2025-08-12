@@ -55,3 +55,9 @@ connect ip:
 	zenoh-bridge-ros2dds -e tcp/{{ip}}:7447
 	# Stop the ros2 deamon, so we realistic topics when we run `ros2 topic list`
 	ros2 daemon stop
+
+source:
+	# Source the ROS 2 environment
+	. /opt/ros/humble/setup.zsh
+	# Source the workspace setup file
+	. install/setup.zsh
