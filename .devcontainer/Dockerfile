@@ -72,6 +72,7 @@ RUN apt-get install -y \
   ros-humble-irobot-create-description \
   ros-humble-turtlebot4-description \
   ros-humble-turtlebot4-viz \
+  ros-humble-turtlebot4-navigation \
   ros-humble-nav2-rviz-plugins
 
 # Add zenoh bridge repository

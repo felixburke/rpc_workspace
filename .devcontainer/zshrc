@@ -129,6 +129,9 @@ alias sa='sr && sc'
 # Set default editor
 export VISUAL="vim"
 
+# Activate loopback multicast for ROS 2
+sudo ip l set lo multicast on
+
 # Some user instructions
 echo "Hello there! Welcome to the TAMS ROS 2 development environment!"
 echo "To compile all packages in the workspace use 'just build'. If you want to compile only a specific package use 'just build-package <package_name>'."

@@ -49,5 +49,9 @@ deploy ip: (sync ip) (_build-robot ip)
 deploy-clean ip: (clean-robot ip) (deploy ip)
 
 connect ip:
+	# Restart the zenoh bridge on the robot with the given IP address. This is currently a hack, as sometimes the bridge needs a restart somehow.
+	ssh ubuntu@{{ip}} "sudo systemctl restart zenoh-bridge.service"
 	# Start a zenoh connection to the specified IP address
 	zenoh-bridge-ros2dds -e tcp/{{ip}}:7447
+	# Stop the ros2 deamon, so we realistic topics when we run `ros2 topic list`
+	ros2 daemon stop
