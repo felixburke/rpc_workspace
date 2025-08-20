@@ -6,7 +6,7 @@ launch:
       namespace: ""
       output: screen
       param:
-        - from: $(find-pkg-share tams_lasertag_client)/config/apriltag.yaml
+        - from: $(find-pkg-share tams_lasertag_client)/config/game_client.yaml
       remap:
         - from: /image_rect
           to: /oakd/rgb/preview/image_raw
