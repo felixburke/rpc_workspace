@@ -17,6 +17,8 @@ find_package(rosidl_default_generators REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SubmitHit.srv"
+  "msg/Scoreboard.msg"
+  "msg/Score.msg"
   DEPENDENCIES sensor_msgs
 )
 

@@ -17,10 +17,14 @@
 
 #include <irobot_create_msgs/srv/e_stop.hpp>
 
-#include "tams_lasertag_client/srv/submit_hit.hpp"
+#include <tams_lasertag_client/srv/submit_hit.hpp>
+#include <tams_lasertag_client/msg/scoreboard.hpp>
+#include <tams_lasertag_client/msg/score.hpp>
 
 using namespace std::chrono_literals;
 using SubmitHit = tams_lasertag_client::srv::SubmitHit;
+using Scoreboard = tams_lasertag_client::msg::Scoreboard;
+using Score = tams_lasertag_client::msg::Score;
 using json = nlohmann::json;
 
 
@@ -187,6 +191,9 @@ public:
     // Service Clients
     e_stop_srv_ = this->create_client<irobot_create_msgs::srv::EStop>("e_stop");
 
+    // Publishers
+    scoreboard_pub_ = this->create_publisher<Scoreboard>("scoreboard", rclcpp::QoS(10));
+
     // Heartbeat
     heartbeat_timer_ = this->create_wall_timer(
       std::chrono::duration<double>(hb_period),
@@ -326,6 +333,8 @@ private:
 
     try {
       auto j = json::parse(resp);
+
+      // Handle game state changes
       std::string state = j.value("state", "unknown");
       if (state != last_state_) {
         RCLCPP_INFO(get_logger(), "Server state changed: %s -> %s",
@@ -346,6 +355,22 @@ private:
         }
         last_state_ = state;
       }
+
+      // Publish scoreboard
+      if (j.contains("scoreboard") and j["scoreboard"].is_object())
+      {
+        Scoreboard scoreboard_msg;
+        for (const auto& item : j["scoreboard"].items()) {
+          Score score_msg;
+          score_msg.player = item.key();
+          score_msg.score = item.value().get<double>();
+          scoreboard_msg.scores.push_back(score_msg);
+        }
+        scoreboard_pub_->publish(scoreboard_msg);
+      } else {
+        RCLCPP_WARN(get_logger(), "Heartbeat JSON does not contain a valid 'scoreboard' entry, skipping scoreboard update");
+      }
+
       // Optionally, track connected players or scoreboard if needed.
     } catch (const std::exception& e) {
       RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 5000,
@@ -360,6 +385,7 @@ private:
 
   rclcpp::Service<SubmitHit>::SharedPtr submit_srv_;
   rclcpp::Client<irobot_create_msgs::srv::EStop>::SharedPtr e_stop_srv_;
+  rclcpp::Publisher<Scoreboard>::SharedPtr scoreboard_pub_;
   rclcpp::TimerBase::SharedPtr heartbeat_timer_;
 };
 
