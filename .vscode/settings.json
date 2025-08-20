@@ -212,7 +212,18 @@
         "future": "cpp",
         "*.ipp": "cpp",
         "span": "cpp",
-        "ranges": "cpp"
+        "ranges": "cpp",
+        "csetjmp": "cpp",
+        "barrier": "cpp",
+        "charconv": "cpp",
+        "coroutine": "cpp",
+        "cuchar": "cpp",
+        "netfwd": "cpp",
+        "source_location": "cpp",
+        "rope": "cpp",
+        "latch": "cpp",
+        "scoped_allocator": "cpp",
+        "syncstream": "cpp"
     },
     // Tell the ROS extension where to find the setup.bash
     // This also utilizes the COLCON_WS environment variable, which needs to be set

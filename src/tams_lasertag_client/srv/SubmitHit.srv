@@ -1,0 +1,13 @@
+# Request: an image and its camera info to extract the 3x3 intrinsics matrix.
+sensor_msgs/Image image
+sensor_msgs/CameraInfo camera_info
+---
+# Response from server
+bool success
+string message
+bool hit
+float64 score
+float64 score_distance
+float64 score_center
+float64 score_alignment
+string target

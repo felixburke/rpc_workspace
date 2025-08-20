@@ -1,0 +1,14 @@
+launch:
+  - node:
+      pkg: tams_lasertag_client
+      exec: game_client_node
+      name: game_client_node
+      namespace: ""
+      output: screen
+      param:
+        - from: $(find-pkg-share tams_lasertag_client)/config/apriltag.yaml
+      remap:
+        - from: /image_rect
+          to: /oakd/rgb/preview/image_raw
+        - from: /camera_info
+          to: /oakd/rgb/preview/camera_info
