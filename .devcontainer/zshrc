@@ -97,6 +97,11 @@ else
   done
 fi
 
+# Try to source the colcon workspace setup file
+if [[ -d "$COLCON_WS" && -f "$COLCON_WS/install/setup.$shell" ]]; then
+  source "$COLCON_WS/install/setup.$shell" &> /dev/null
+fi
+
 # Update the tab completion
 update_ros2_argcomplete
 
