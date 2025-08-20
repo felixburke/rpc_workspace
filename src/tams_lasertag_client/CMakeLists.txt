@@ -38,8 +38,16 @@ target_link_libraries(game_client_node
   nlohmann_json::nlohmann_json
 )
 
-rosidl_target_interfaces(game_client_node
-  ${PROJECT_NAME} "rosidl_typesupport_cpp")
+rosidl_get_typesupport_target(
+  cpp_typesupport_target
+  "${PROJECT_NAME}"
+  "rosidl_typesupport_cpp"
+)
+
+target_link_libraries(
+  game_client_node
+  "${cpp_typesupport_target}"
+)
 
 install(TARGETS
   game_client_node
