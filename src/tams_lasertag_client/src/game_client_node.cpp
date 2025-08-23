@@ -16,6 +16,7 @@
 #include <utility>
 
 #include <irobot_create_msgs/srv/e_stop.hpp>
+#include <rcl_interfaces/msg/log.hpp>
 
 #include <tams_lasertag_client/srv/submit_hit.hpp>
 #include <tams_lasertag_client/msg/scoreboard.hpp>
@@ -25,6 +26,7 @@ using namespace std::chrono_literals;
 using SubmitHit = tams_lasertag_client::srv::SubmitHit;
 using Scoreboard = tams_lasertag_client::msg::Scoreboard;
 using Score = tams_lasertag_client::msg::Score;
+using LogMsg = rcl_interfaces::msg::Log;
 using json = nlohmann::json;
 
 
@@ -194,10 +196,21 @@ public:
     // Publishers
     scoreboard_pub_ = this->create_publisher<Scoreboard>("scoreboard", rclcpp::QoS(10));
 
+    // Subscription
+    rosout_sub_ = this->create_subscription<LogMsg>(
+      "/rosout",
+      rclcpp::QoS(10),
+      std::bind(&GameClientNode::on_rosout, this, std::placeholders::_1));
+
     // Heartbeat
     heartbeat_timer_ = this->create_wall_timer(
       std::chrono::duration<double>(hb_period),
       std::bind(&GameClientNode::do_heartbeat, this));
+
+    // Log upload timer
+    log_timer_ = this->create_wall_timer(
+      0.5s,
+      std::bind(&GameClientNode::do_log_upload, this));
 
     RCLCPP_INFO(get_logger(), "GameClientNode up. server_url=%s, user=%s, hb=%.2fs",
       server_url_.c_str(), user_.c_str(), hb_period);
@@ -310,6 +323,73 @@ private:
     }
   }
 
+  void on_rosout(const LogMsg::SharedPtr msg)
+  {
+    // Buffer log messages
+    // Only buffer INFO and higher
+    if (msg->level >= LogMsg::INFO) {
+      log_buffer_.emplace_back(*msg);
+      // Limit buffer size
+      size_t max_buffer_size = 100;
+      if (log_buffer_.size() > max_buffer_size) {
+        log_buffer_.erase(log_buffer_.begin(), log_buffer_.begin() + (log_buffer_.size() - max_buffer_size));
+      }
+    }
+  }
+
+  void do_log_upload()
+  {
+    if (log_buffer_.empty()) {
+      return;
+    }
+
+    const std::map<uint8_t, std::string> log_level_map = {
+      {LogMsg::DEBUG, "DEBUG"},
+      {LogMsg::INFO, "INFO"},
+      {LogMsg::WARN, "WARN"},
+      {LogMsg::ERROR, "ERROR"},
+      {LogMsg::FATAL, "FATAL"}
+    };
+
+    // Prepare JSON array of log messages
+    json log_array = json::array();
+    for (const auto& log_msg : log_buffer_) {
+      json j = {
+        {"timestamp", {
+          {"sec", log_msg.stamp.sec},
+          {"nanosec", log_msg.stamp.nanosec}
+        }},
+        {"level", log_level_map.contains(log_msg.level) ? log_level_map.at(log_msg.level) : "UNKNOWN"},
+        {"name", log_msg.name},
+        {"msg", log_msg.msg},
+      };
+      log_array.push_back(j);
+    }
+
+    json body = {
+      {"user", user_},
+      {"logs", log_array}
+    };
+
+    long code = 0;
+    std::string resp;
+    const std::string url = server_url_ + "log";
+    bool ok = http_post_json(url, body, code, resp, 5000);
+
+    if (!ok) {
+      RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 10000, "Log upload HTTP error");
+      return;
+    }
+    if (code / 100 != 2) {
+      RCLCPP_WARN_THROTTLE(get_logger(), *get_clock(), 10000,
+                           "Log upload returned HTTP %ld: %s", code, resp.c_str());
+      return;
+    }
+
+    // Clear buffer on success
+    log_buffer_.clear();
+  }
+
   void do_heartbeat()
   {
     json body = {
@@ -382,11 +462,14 @@ private:
   std::string server_url_;
   std::string user_;
   std::string last_state_{"unknown"};
+  std::vector<LogMsg> log_buffer_;
 
   rclcpp::Service<SubmitHit>::SharedPtr submit_srv_;
   rclcpp::Client<irobot_create_msgs::srv::EStop>::SharedPtr e_stop_srv_;
   rclcpp::Publisher<Scoreboard>::SharedPtr scoreboard_pub_;
+  rclcpp::Subscription<LogMsg>::SharedPtr rosout_sub_;
   rclcpp::TimerBase::SharedPtr heartbeat_timer_;
+  rclcpp::TimerBase::SharedPtr log_timer_;
 };
 
 int main(int argc, char** argv)

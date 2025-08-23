@@ -18,6 +18,7 @@
   <depend>libopencv-dev</depend>
   <depend>libcurl</depend>
   <depend>irobot_create_msgs</depend>
+  <depend>rcl_interfaces</depend>
 
   <test_depend>ament_lint_auto</test_depend>
   <test_depend>ament_lint_common</test_depend>

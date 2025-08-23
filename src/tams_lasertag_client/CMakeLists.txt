@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.8)
 project(tams_lasertag_client)
 
 if(NOT CMAKE_CXX_STANDARD)
-  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD 20)
 endif()
 
 find_package(ament_cmake REQUIRED)
@@ -14,6 +14,7 @@ find_package(CURL REQUIRED)
 find_package(nlohmann_json REQUIRED)
 find_package(irobot_create_msgs REQUIRED)
 find_package(rosidl_default_generators REQUIRED)
+find_package(rcl_interfaces REQUIRED)
 
 rosidl_generate_interfaces(${PROJECT_NAME}
   "srv/SubmitHit.srv"
@@ -32,6 +33,7 @@ ament_target_dependencies(game_client_node
   cv_bridge
   nlohmann_json
   irobot_create_msgs
+  rcl_interfaces
 )
 
 target_link_libraries(game_client_node
