@@ -1,0 +1,5 @@
+game_client_node:                 # node name
+  ros__parameters:
+    server_url: "http://localhost:5000"  # URL of the game server TODO change this to the actual server URL
+    heartbeat_period: 1.0          # heartbeat period in seconds
+

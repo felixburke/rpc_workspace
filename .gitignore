@@ -1,32 +1,12 @@
-.cproject
-.project
-.pydevproject
-.settings
-.classpath
-.classpath-generated
-.project-generated
-ros.properties
-dependencies.xml
-cmake_install.cmake
+# ROS 2 workspace
 build/
-bin/
-msg_gen/
-srv_gen/
-*.pyc
-.gradle/
-.svn
-*.bak
-*.swp
-*~
-*/msg/*Feedback.msg
-*/msg/*Goal.msg
-*/msg/*Action.msg
-*/msg/*Result.msg
-*/src/*/cfg
-*/src/*/msg
-*/src/*/srv
-*.aux
-*.fdb_latexmk
-*.log
-*.synctex.gz
-*.fls
+install/
+log/
+
+# Colcon specific
+.colcon/
+.colcon.meta
+
+# Python cache
+__pycache__/
+*.py[cod]

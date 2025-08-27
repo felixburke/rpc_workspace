@@ -1,0 +1,14 @@
+launch:
+  - node:
+      pkg: apriltag_ros
+      exec: apriltag_node
+      name: apriltag_node
+      namespace: ""
+      output: screen
+      param:
+        - from: $(find-pkg-share tams_lasertag_client)/config/apriltag.yaml
+      remap:
+        - from: /image_rect
+          to: /oakd/rgb/preview/image_raw
+        - from: /camera_info
+          to: /oakd/rgb/preview/camera_info
