@@ -51,7 +51,7 @@ export ROS_DOMAIN_ID=24
 export ROS_LOCALHOST_ONLY=1
 
 # Set the default colcon workspace
-export COLCON_WS="$HOME/turtlebot_workspace"
+export COLCON_WS="$HOME/rpc_workspace"
 
 # Set the default log level for colcon
 export COLCON_LOG_LEVEL=30

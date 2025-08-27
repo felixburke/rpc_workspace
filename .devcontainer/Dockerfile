@@ -117,4 +117,4 @@ COPY --chown=$user:$user zshrc /home/$user/.zshrc
 ENV QT_X11_NO_MITSHM=1
 
 # Switch to the workspace directory
-WORKDIR /home/$user/turtlebot_workspace
+WORKDIR /home/$user/rpc_workspace

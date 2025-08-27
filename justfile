@@ -23,7 +23,7 @@ clean:
 
 clean-robot ip:
 	# Clean the workspace on the robot with the given IP address
-	ssh ubuntu@{{ip}} "cd /home/ubuntu/turtlebot_workspace && rm -rf build/ install/ log/"
+	ssh ubuntu@{{ip}} "cd /home/ubuntu/rpc_workspace && rm -rf build/ install/ log/"
 
 build:
 	# Build the workspace
@@ -32,7 +32,7 @@ build:
 
 _build-robot ip:
 	# Run the build command on the robot
-	ssh ubuntu@{{ip}} "cd /home/ubuntu/turtlebot_workspace && . /opt/ros/$ROS_DISTRO/setup.bash && colcon build --symlink-install --continue-on-error"
+	ssh ubuntu@{{ip}} "cd /home/ubuntu/rpc_workspace && . /opt/ros/$ROS_DISTRO/setup.bash && colcon build --symlink-install --continue-on-error"
 
 build-package package:
 	# Build a specific package in the workspace
@@ -42,7 +42,7 @@ build-package package:
 sync ip:
 	# Sync the workspace to a robot with the given IP address
 	# Copy this repository to the robot
-	rsync --delete -av --exclude='.git' --exclude='install' --exclude='build' --exclude='log' . ubuntu@{{ip}}:/home/ubuntu/turtlebot_workspace/
+	rsync --delete -av --exclude='.git' --exclude='install' --exclude='build' --exclude='log' . ubuntu@{{ip}}:/home/ubuntu/rpc_workspace/
 
 deploy ip: (sync ip) (_build-robot ip)
 

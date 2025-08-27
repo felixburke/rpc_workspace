@@ -35,8 +35,8 @@
     }
   },
 
-  "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/tams/turtlebot_workspace",
-  "workspaceFolder": "/home/tams/turtlebot_workspace",
+  "workspaceMount": "type=bind,source=${localWorkspaceFolder},target=/home/tams/rpc_workspace",
+  "workspaceFolder": "/home/tams/rpc_workspace",
 
   "mounts": [
     "type=bind,source=${localEnv:HOME},target=/srv/host_home,consistency=cached"
